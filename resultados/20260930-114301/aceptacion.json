@@ -1,0 +1,197 @@
+{
+    "baseUrl": "http://localhost:8080/api/v1",
+    "passed": 27,
+    "total": 27,
+    "percentage": 100,
+    "results": [
+        {
+            "case_id": "A01",
+            "title": "T2T válida -> LIQUIDADO",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 710
+        },
+        {
+            "case_id": "A02",
+            "title": "VNT válida -> LIQUIDADO",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 50
+        },
+        {
+            "case_id": "A03",
+            "title": "T2T sin emisor.cuenta -> PRX-011",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 28
+        },
+        {
+            "case_id": "A04",
+            "title": "VNT con emisor.cuenta -> PRX-012",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 15
+        },
+        {
+            "case_id": "A05",
+            "title": "VNT sin sucursal -> PRX-011",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 5
+        },
+        {
+            "case_id": "A06",
+            "title": "Cuenta de 17 dígitos -> PRX-001",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 5
+        },
+        {
+            "case_id": "A07",
+            "title": "Dígito verificador incorrecto -> PRX-002",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 5
+        },
+        {
+            "case_id": "A08",
+            "title": "Institución 899 -> PRX-003",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 5
+        },
+        {
+            "case_id": "A09",
+            "title": "Prefijo distinto de institución -> PRX-030",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 4
+        },
+        {
+            "case_id": "A10",
+            "title": "Importe cero -> PRX-004",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 24
+        },
+        {
+            "case_id": "A11",
+            "title": "Importe negativo -> PRX-004",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 6
+        },
+        {
+            "case_id": "A12",
+            "title": "Tres decimales -> PRX-005",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 24
+        },
+        {
+            "case_id": "A13",
+            "title": "Importe sobre límite -> PRX-005",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 16
+        },
+        {
+            "case_id": "A14",
+            "title": "Divisa USD -> PRX-006",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 18
+        },
+        {
+            "case_id": "A15",
+            "title": "Errores acumulados -> PRX-007 + PRX-008",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 17
+        },
+        {
+            "case_id": "A16",
+            "title": "Referencia repetida -> PRX-010",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 71
+        },
+        {
+            "case_id": "A17",
+            "title": "Emisor igual a receptor -> PRX-013",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 9
+        },
+        {
+            "case_id": "A18",
+            "title": "Escenario fondos insuficientes -> PRX-020",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 71
+        },
+        {
+            "case_id": "A19",
+            "title": "Escenario cuenta inexistente -> PRX-021",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 84
+        },
+        {
+            "case_id": "A20",
+            "title": "Institución 805 -> PRX-022",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 68
+        },
+        {
+            "case_id": "A21",
+            "title": "LIQUIDADO -> DEVUELTO -> PRX-014 (JUnit)",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 0
+        },
+        {
+            "case_id": "A22",
+            "title": "ID inexistente -> HTTP 404",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 30
+        },
+        {
+            "case_id": "A23",
+            "title": "Listado paginado con al menos 120 registros",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 89
+        },
+        {
+            "case_id": "A24",
+            "title": "Misma clave y cuerpo -> 201 y 200",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 82
+        },
+        {
+            "case_id": "A25",
+            "title": "Misma clave y cuerpo distinto -> PRX-015",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 76
+        },
+        {
+            "case_id": "A26",
+            "title": "Sin respuesta -> EN_PROCESO / PRX-023",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 2318
+        },
+        {
+            "case_id": "A27",
+            "title": "Salud y catálogo",
+            "passed": true,
+            "detail": "OK",
+            "duration_ms": 16
+        }
+    ]
+}

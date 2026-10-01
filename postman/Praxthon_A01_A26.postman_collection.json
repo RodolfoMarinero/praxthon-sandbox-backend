@@ -1,0 +1,1587 @@
+{
+  "info": {
+    "_postman_id": "f2a63dc5-56de-405b-9fe9-9e8c5f15a3f5",
+    "name": "Praxthon Sandbox 2026 - A01 a A26",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8080/api/v1"
+    },
+    {
+      "key": "trackingRef",
+      "value": ""
+    },
+    {
+      "key": "idempotencyKey",
+      "value": ""
+    },
+    {
+      "key": "operationId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "A01-A02 Altas correctas",
+      "item": [
+        {
+          "name": "A01 T2T bien formada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A01 Consulta estado final",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones/{{operationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones",
+                "{{operationId}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));",
+                  "const body=pm.response.json();pm.test('Final LIQUIDADO',()=>pm.expect(body.estado).to.eql('LIQUIDADO'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A02 VNT bien formada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"VNT\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 3200,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"sucursal\": \"0417\",\n    \"nombre\": \"Marta Solis\",\n    \"documentoIdentidad\": {\n      \"tipo\": \"INE\",\n      \"numero\": \"ID1734558\"\n    }\n  },\n  \"receptor\": {\n    \"institucion\": \"803\",\n    \"cuenta\": \"803180000900050028\",\n    \"nombre\": \"Comercial Gamma\"\n  },\n  \"concepto\": \"Deposito ventanilla\",\n  \"folioNumerico\": 1190\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "A03-A17 Validaciones",
+      "item": [
+        {
+          "name": "A03 T2T sin emisor.cuenta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-011',()=>pm.expect(codes).to.include('PRX-011'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A06 Cuenta receptora 17 digitos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"80218000020003001\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-001',()=>pm.expect(codes).to.include('PRX-001'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A07 Digito verificador alterado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030012\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-002',()=>pm.expect(codes).to.include('PRX-002'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A08 Institucion 899",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"899\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-003',()=>pm.expect(codes).to.include('PRX-003'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A09 Prefijo no coincide",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"803\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-030',()=>pm.expect(codes).to.include('PRX-030'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A10 Importe cero",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 0,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-004',()=>pm.expect(codes).to.include('PRX-004'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A11 Importe negativo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": -1,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-004',()=>pm.expect(codes).to.include('PRX-004'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A12 Tres decimales",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1.001,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-005',()=>pm.expect(codes).to.include('PRX-005'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A13 Importe excedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1000000.01,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-005',()=>pm.expect(codes).to.include('PRX-005'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A14 Divisa USD",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"USD\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-006',()=>pm.expect(codes).to.include('PRX-006'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A17 Cuenta emisora igual receptora",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-013',()=>pm.expect(codes).to.include('PRX-013'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A15 Concepto y folio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"\",\n  \"folioNumerico\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);pm.test('PRX-007 y PRX-008',()=>pm.expect(codes).to.include.members(['PRX-007','PRX-008']));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A04 VNT con emisor.cuenta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"VNT\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 100,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"sucursal\": \"0417\",\n    \"nombre\": \"Marta\",\n    \"documentoIdentidad\": {\n      \"tipo\": \"INE\",\n      \"numero\": \"ID1\"\n    },\n    \"cuenta\": \"801180000118359717\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis\"\n  },\n  \"concepto\": \"VNT\",\n  \"folioNumerico\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-012',()=>pm.expect(codes).to.include('PRX-012'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A05 VNT sin sucursal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"VNT\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 100,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"nombre\": \"Marta\",\n    \"documentoIdentidad\": {\n      \"tipo\": \"INE\",\n      \"numero\": \"ID1\"\n    }\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis\"\n  },\n  \"concepto\": \"VNT\",\n  \"folioNumerico\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422',()=>pm.response.to.have.status(422));",
+                  "const codes=pm.response.json().errores.map(e=>e.codigo);",
+                  "pm.test('PRX-011',()=>pm.expect(codes).to.include('PRX-011'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "A18-A20 y A26 Escenarios",
+      "item": [
+        {
+          "name": "A18 Crear S02",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "X-Escenario-Forzado",
+                "value": "S02"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A18 Consultar resultado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones/{{operationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones",
+                "{{operationId}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));",
+                  "const body=pm.response.json();pm.test('DEVUELTO',()=>pm.expect(body.estado).to.eql('DEVUELTO'));pm.test('PRX-020',()=>pm.expect(body.transiciones.some(t=>t.motivo==='PRX-020')).to.be.true);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A19 Crear S03",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "X-Escenario-Forzado",
+                "value": "S03"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A19 Consultar resultado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones/{{operationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones",
+                "{{operationId}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));",
+                  "const body=pm.response.json();pm.test('DEVUELTO',()=>pm.expect(body.estado).to.eql('DEVUELTO'));pm.test('PRX-021',()=>pm.expect(body.transiciones.some(t=>t.motivo==='PRX-021')).to.be.true);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A20 Crear S04",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "X-Escenario-Forzado",
+                "value": "S04"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A20 Consultar resultado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones/{{operationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones",
+                "{{operationId}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));",
+                  "const body=pm.response.json();pm.test('DEVUELTO',()=>pm.expect(body.estado).to.eql('DEVUELTO'));pm.test('PRX-022',()=>pm.expect(body.transiciones.some(t=>t.motivo==='PRX-022')).to.be.true);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A26 Crear S05",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              },
+              {
+                "key": "X-Escenario-Forzado",
+                "value": "S05"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A26 Consultar resultado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones/{{operationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones",
+                "{{operationId}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));",
+                  "const body=pm.response.json();pm.test('EN_PROCESO',()=>pm.expect(body.estado).to.eql('EN_PROCESO'));pm.test('PRX-023',()=>pm.expect(body.transiciones.some(t=>t.motivo==='PRX-023')).to.be.true);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "A22-A25 Consulta e idempotencia",
+      "item": [
+        {
+          "name": "A22 ID inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones/op_00000000000000000000000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones",
+                "op_00000000000000000000000000"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404',()=>pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A23 Listado paginado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones?pagina=0&tamano=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones?pagina=0&tamano=20"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));const b=pm.response.json();pm.test('20 maximo',()=>pm.expect(b.contenido.length).to.be.at.most(20));pm.test('120 semillas',()=>pm.expect(b.totalElementos).to.be.at.least(120));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A24 Primera llamada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('trackingRef', 'PRX' + Date.now() + Math.floor(Math.random()*1000));",
+                  "pm.collectionVariables.set('idempotencyKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('Estado inicial RECIBIDO', () => pm.expect(body.estado).to.eql('RECIBIDO'));",
+                  "pm.collectionVariables.set('operationId', body.id);",
+                  "pm.collectionVariables.set('originalId',body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A24 Reintento mismo cuerpo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 1500.5,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200',()=>pm.response.to.have.status(200));pm.test('Mismo ID',()=>pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get('originalId')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "A25 Conflicto distinto cuerpo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Clave-Idempotencia",
+                "value": "{{idempotencyKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/operaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "operaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoOperacion\": \"T2T\",\n  \"referenciaSeguimiento\": \"{{trackingRef}}\",\n  \"importe\": {\n    \"valor\": 999,\n    \"divisa\": \"MXN\"\n  },\n  \"emisor\": {\n    \"institucion\": \"801\",\n    \"cuenta\": \"801180000118359717\",\n    \"nombre\": \"Ana Ruiz Delgado\"\n  },\n  \"receptor\": {\n    \"institucion\": \"802\",\n    \"cuenta\": \"802180000200030011\",\n    \"nombre\": \"Luis Cano Mora\"\n  },\n  \"concepto\": \"Pago de servicios\",\n  \"folioNumerico\": 4821\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409',()=>pm.response.to.have.status(409));pm.test('PRX-015',()=>pm.expect(pm.response.json().errores[0].codigo).to.eql('PRX-015'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

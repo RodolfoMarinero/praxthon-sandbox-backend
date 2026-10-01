@@ -1,0 +1,1 @@
+package com.amisimecompila.speisandbox.shared.util; import static org.assertj.core.api.Assertions.assertThat; import org.junit.jupiter.api.Test; class OperacionIdGeneratorTest{@Test void formato(){assertThat(new OperacionIdGenerator().generar()).startsWith("op_").hasSize(29);}}

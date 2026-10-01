@@ -1,0 +1,12 @@
+M01 Acepta importe cero                        DETECTADO
+M02 Acepta importe negativo                    DETECTADO
+M03 Ignora tercer decimal                      DETECTADO
+M04 Permite USD                                DETECTADO
+M05 Elimina un error acumulado                 DETECTADO
+M06 Permite referencia duplicada               DETECTADO
+M07 Permite cuentas iguales                    DETECTADO
+M08 ID inexistente responde 200                DETECTADO
+M09 Reduce total de registros                  DETECTADO
+M10 Oculta conflicto de idempotencia           DETECTADO
+
+Mutantes detectados: 10/10 (100%)

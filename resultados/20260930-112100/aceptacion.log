@@ -1,0 +1,13 @@
+Ejecutando 27 casos contra http://localhost:8080/api/v1
+
+Traceback (most recent call last):
+  File "C:\Users\rmari\OneDrive\Escritorio\PrySPEI\suite_aceptacion_A27.py", line 520, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\rmari\OneDrive\Escritorio\PrySPEI\suite_aceptacion_A27.py", line 490, in main
+    print(f"{case_id:<4} {title:<58} {marker} ({duration_ms} ms)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rmari\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 16: character maps to <undefined>

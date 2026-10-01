@@ -1,0 +1,17 @@
+{
+    "backendManagedByScript": false,
+    "baseUrl": "http://localhost:8080/api/v1",
+    "success": true,
+    "steps": [
+        {
+            "name": "Suite A01-A27",
+            "exitCode": 0,
+            "success": true
+        },
+        {
+            "name": "Mutantes contractuales",
+            "exitCode": 0,
+            "success": true
+        }
+    ]
+}
